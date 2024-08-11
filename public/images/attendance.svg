@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<svg
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:imagebot="http://www.imagebot.com/xmlns"
+    xmlns:cc="http://web.resource.org/cc/"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    viewBox="0 0 288 288"
+  >
+  <title
+  />
+  <g
+      id="imagebot_2"
+      label="Ebene 1"
+    >
+    <g
+        id="imagebot_13"
+        label="Ebene 1"
+        transform="translate(-4.4707 -5.9135) matrix(.95298 0 0 .97361 -132.89 -757.76)"
+      >
+      <rect
+          id="imagebot_22"
+          stroke-linejoin="round"
+          transform="matrix(.99963 -.027080 .027080 .99963 0 0)"
+          height="266.04"
+          width="198.03"
+          stroke="#000"
+          stroke-linecap="round"
+          y="795.97"
+          x="219.35"
+          stroke-width="3.6785"
+          fill="#183a8e"
+      />
+      <path
+          id="imagebot_21"
+          stroke-linejoin="round"
+          d="m240.83 789.99l193.95 0.14 7.21 265.97-193.96-0.2-7.2-265.91z"
+          stroke="#c3c3c3"
+          stroke-linecap="round"
+          stroke-width="1.0382"
+          fill="#fff"
+      />
+      <path
+          id="imagebot_20"
+          stroke-linejoin="round"
+          d="m239.83 791.49l192.45 0.21 7.57 265.9-192.82-0.2-7.2-265.91z"
+          stroke="#c3c3c3"
+          stroke-linecap="round"
+          stroke-width="1.0382"
+          fill="#fff"
+      />
+      <path
+          id="imagebot_19"
+          stroke-linejoin="round"
+          d="m238.83 791.99l190.95 1.14 7.21 265.97-190.96-1.2-7.2-265.91z"
+          stroke="#c3c3c3"
+          stroke-linecap="round"
+          stroke-width="1.0382"
+          fill="#fff"
+      />
+      <path
+          id="imagebot_18"
+          stroke-linejoin="round"
+          d="m239.72 789.27l186.89 2.63 7.2 269.9-189.02-4.6-5.07-267.93z"
+          stroke="#000"
+          stroke-linecap="round"
+          stroke-width="3.6782"
+          fill="#2056c6"
+      />
+      <path
+          id="imagebot_17"
+          stroke-linejoin="round"
+          d="m305.17 825.41c17.75 0.17 34.79 0.33 53.26-0.22 21.8-0.14 26.51-3.66 27 17.95 0.25 11.09 0.5 22.17 0.75 33.26 1.46 19.35-6.96 16.49-26.13 16.12-18.85-0.26-36.64-0.42-53.36-0.28-21.55-0.05-26 0.52-26.65-17.59-0.33-10.92-0.67-21.84-1-32.76-0.95-19.18 7.17-16.66 26.13-16.48v0z"
+          stroke="#696969"
+          stroke-linecap="round"
+          stroke-width="2.0763"
+          fill="#fff"
+      />
+      <path
+          id="imagebot_16"
+          stroke="#000"
+          stroke-width="1.0382px"
+          fill="none"
+          d="m292.26 846.88l80.65 0.64"
+      />
+      <path
+          id="imagebot_15"
+          stroke="#000"
+          stroke-width="1.0382px"
+          fill="none"
+          d="m291.61 861.95l80.8 0.57"
+      />
+      <path
+          id="imagebot_14"
+          stroke="#000"
+          stroke-width="1.0382px"
+          fill="none"
+          d="m292.19 875.81l80.72 0.71"
+      />
+    </g
+    >
+    <g
+        id="imagebot_3"
+        label="Ebene 1"
+        transform="translate(-4.4707 -5.9135) matrix(.95298 0 0 .97361 -6.2798 -718.82)"
+      >
+      <rect
+          id="imagebot_12"
+          stroke-linejoin="round"
+          transform="matrix(.99963 -.027080 .027080 .99963 0 0)"
+          height="266.04"
+          width="198.03"
+          stroke="#000"
+          stroke-linecap="round"
+          y="767.92"
+          x="-7.5172"
+          stroke-width="3.6785"
+          fill="#8e1818"
+      />
+      <path
+          id="imagebot_11"
+          stroke-linejoin="round"
+          d="m13.281 768.1l193.96 0.13 7.2 265.97-193.95-0.2-7.209-265.9z"
+          stroke="#c3c3c3"
+          stroke-linecap="round"
+          stroke-width="1.0382"
+          fill="#fff"
+      />
+      <path
+          id="imagebot_10"
+          stroke-linejoin="round"
+          d="m12.281 769.6l192.46 0.2 7.56 266-192.81-0.3-7.209-265.9z"
+          stroke="#c3c3c3"
+          stroke-linecap="round"
+          stroke-width="1.0382"
+          fill="#fff"
+      />
+      <path
+          id="imagebot_9"
+          stroke-linejoin="round"
+          d="m11.281 770.1l190.96 1.13 7.2 265.97-190.96-1.2-7.199-265.9z"
+          stroke="#c3c3c3"
+          stroke-linecap="round"
+          stroke-width="1.0382"
+          fill="#fff"
+      />
+      <path
+          id="imagebot_8"
+          stroke-linejoin="round"
+          d="m12.179 767.37l186.88 2.64 7.21 269.89-189.03-4.6-5.061-267.93z"
+          stroke="#000"
+          stroke-linecap="round"
+          stroke-width="3.6782"
+          fill="#c62020"
+      />
+      <path
+          id="imagebot_7"
+          stroke-linejoin="round"
+          d="m77.624 803.51c17.753 0.17 34.796 0.34 53.256-0.21 21.8-0.14 26.52-3.67 27.01 17.95 0.25 11.08 0.5 22.17 0.75 33.25 1.46 19.36-6.96 16.49-26.13 16.13-18.86-0.26-36.647-0.43-53.368-0.28-21.544-0.05-25.995 0.52-26.647-17.6-0.333-10.91-0.666-21.83-1-32.75-0.946-19.18 7.17-16.66 26.129-16.49v0z"
+          stroke="#696969"
+          stroke-linecap="round"
+          stroke-width="2.0763"
+          fill="#fff"
+      />
+      <path
+          id="imagebot_6"
+          stroke="#000"
+          stroke-width="1.0382px"
+          fill="none"
+          d="m64.711 824.98l80.659 0.64"
+      />
+      <path
+          id="imagebot_5"
+          stroke="#000"
+          stroke-width="1.0382px"
+          fill="none"
+          d="m64.068 840.06l80.802 0.57"
+      />
+      <path
+          id="imagebot_4"
+          stroke="#000"
+          stroke-width="1.0382px"
+          fill="none"
+          d="m64.64 853.91l80.73 0.72"
+      />
+    </g
+    >
+    <title
+      >Ebene 1</title
+    >
+  </g
+  >
+  <metadata
+    >
+    <rdf:RDF
+      >
+      <cc:Work
+        >
+        <dc:format
+          >image/svg+xml</dc:format
+        >
+        <dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        />
+        <cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        />
+        <dc:publisher
+          >
+          <cc:Agent
+              rdf:about="http://openclipart.org/"
+            >
+            <dc:title
+              >Openclipart</dc:title
+            >
+          </cc:Agent
+          >
+        </dc:publisher
+        >
+        <dc:title
+          >Attendance Register</dc:title
+        >
+        <dc:date
+          >2013-04-27T07:51:34</dc:date
+        >
+        <dc:description
+          >Attendance Register Or Attendance Book</dc:description
+        >
+        <dc:source
+          >https://openclipart.org/detail/177486/attendance-register-by-sandeepkh-177486</dc:source
+        >
+        <dc:creator
+          >
+          <cc:Agent
+            >
+            <dc:title
+              >sandeepkh</dc:title
+            >
+          </cc:Agent
+          >
+        </dc:creator
+        >
+        <dc:subject
+          >
+          <rdf:Bag
+            >
+            <rdf:li
+              >attendance</rdf:li
+            >
+            <rdf:li
+              >book</rdf:li
+            >
+            <rdf:li
+              >register</rdf:li
+            >
+          </rdf:Bag
+          >
+        </dc:subject
+        >
+      </cc:Work
+      >
+      <cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        >
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        />
+      </cc:License
+      >
+    </rdf:RDF
+    >
+  </metadata
+  >
+</svg
+>
