@@ -1,5 +1,5 @@
 {
-  "name": "travel-booking-site-backend",
+  "name": "internet-madrasa-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,6 @@
     "node": "20.x"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "keywords": [],
@@ -16,6 +15,7 @@
   "dependencies": {
     "bcrypt": "5.1.0",
     "body-parser": "1.20.2",
+    "cloudinary": "^2.4.0",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
     "dotenv": "16.3.1",
