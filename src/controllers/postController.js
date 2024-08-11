@@ -34,13 +34,13 @@ exports.createPost = (req, res) => {
     .create(postBody)
     .then((data) => {
       res.status(200).json({
-        status: "Alhamdulillah",
+        status: "Success",
         data: data,
       });
     })
     .catch((err) => {
       res.status(400).json({
-        status: "Innalillah",
+        status: "Failed",
         data: err,
       });
     });
@@ -55,13 +55,13 @@ exports.selectPosts = (req, res) => {
     .sort({ postCreatedDate: -1 })
     .then((data) => {
       res.status(200).json({
-        status: "Alhamdulillah",
+        status: "Success",
         data: data,
       });
     })
     .catch((err) => {
       res.status(400).json({
-        status: "Innalillah",
+        status: "Failed",
         data: err,
       });
     });
@@ -76,22 +76,18 @@ exports.updatePost = (req, res) => {
     postImageLink: reqBody.postImageLink,
     postTitle: {
       en: reqBody.postTitle.en,
-      bn: reqBody.postTitle.bn,
     },
     postDescription: {
       en: reqBody.postDescription.en,
-      bn: reqBody.postDescription.bn,
     },
     postCategory: {
       en: reqBody.postCategory.en,
-      bn: reqBody.postCategory.bn,
     },
     postUpdatedDate: new Date(Date.now()).toISOString(),
     postPopularity: {
       en: reqBody.postPopularity.en,
-      bn: reqBody.postPopularity.bn,
     },
-    postLikes: reqBody.postLikes,
+    postUser: reqBody.postUser,
     activeStatus: reqBody.activeStatus,
   };
 
@@ -99,13 +95,13 @@ exports.updatePost = (req, res) => {
     .updateOne({ _id: filter }, { $set: postBody }, { upsert: true })
     .then((data) => {
       res.status(200).json({
-        status: "Alhamdulillah",
+        status: "Success",
         data: data,
       });
     })
     .catch((err) => {
       res.status(400).json({
-        status: "Innalillah",
+        status: "Failed",
         data: err,
       });
     });
@@ -119,13 +115,13 @@ exports.deletePost = (req, res) => {
     .deleteOne({ _id: _id })
     .then((data) => {
       res.status(200).json({
-        status: "Alhamdulillah",
+        status: "Success",
         data: data,
       });
     })
     .catch((err) => {
       res.status(400).json({
-        status: "Innalillah",
+        status: "Failed",
         data: err,
       });
     });
