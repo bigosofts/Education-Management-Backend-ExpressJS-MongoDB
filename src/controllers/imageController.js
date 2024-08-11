@@ -10,12 +10,11 @@ exports.readImage = (req, res) => {
       return [".jpg", ".jpeg", ".png", ".gif", ".bmp"].includes(extname);
     });
 
-    const imagePaths = imageFiles.map((file) => path.join(directoryPath, file));
-
-    // Replace common root path with an empty string and use a proper URL prefix
-    const transformedPaths = imagePaths.map((imagePath) =>
-      imagePath.replace(/\\/g, "/").replace("public", process.env.BACKEND || "")
-    );
+    // Generate the correct URLs
+    const transformedPaths = imageFiles.map((file) => {
+      const urlPath = path.join("images", file).replace(/\\/g, "/");
+      return `${process.env.BACKEND}/${urlPath}`;
+    });
 
     return transformedPaths;
   }
