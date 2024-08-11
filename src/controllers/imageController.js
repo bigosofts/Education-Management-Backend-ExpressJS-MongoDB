@@ -4,7 +4,6 @@ exports.readImage = (req, res) => {
 
   function getAllImagePaths(directoryPath) {
     const files = fs.readdirSync(directoryPath);
-   
 
     const imageFiles = files.filter((file) => {
       const extname = path.extname(file).toLowerCase();
@@ -13,19 +12,16 @@ exports.readImage = (req, res) => {
 
     const imagePaths = imageFiles.map((file) => path.join(directoryPath, file));
 
- 
-    // Replace common root path with an empty string
-
+    // Replace common root path with an empty string and use a proper URL prefix
     const transformedPaths = imagePaths.map((imagePath) =>
-      imagePath.replace(/\\/g, "/").replace("public", process.env.BACKEND)
+      imagePath.replace(/\\/g, "/").replace("public", process.env.BACKEND || "")
     );
-
-   
 
     return transformedPaths;
   }
 
-  const directoryPath = "public/images";
+  // Use path.resolve to get the absolute path
+  const directoryPath = path.resolve("public/images");
   const imagePaths = getAllImagePaths(directoryPath);
 
   res.status(200).json({
