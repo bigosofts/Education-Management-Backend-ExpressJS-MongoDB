@@ -93,6 +93,56 @@ exports.selectResultslimit = (req, res) => {
     });
 };
 
+exports.selectResultsPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { resultRollNo: SearchRgx },
+        { resultRegNo: SearchRgx },
+        { studentUserId: SearchRgx },
+        { studentExamMadrasha: SearchRgx },
+        { studentExamCentre: SearchRgx },
+        { marhala: SearchRgx },
+        { passingYear: SearchRgx },
+        { studentGrade: SearchRgx },
+        { studentMerit: SearchRgx },
+        { activeStatus: SearchRgx },
+      ],
+    };
+
+    const result = await resultModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await resultModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await resultModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await resultModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
+
 //Update Database Record
 exports.updateResult = (req, res) => {
   let reqBody = req.body;

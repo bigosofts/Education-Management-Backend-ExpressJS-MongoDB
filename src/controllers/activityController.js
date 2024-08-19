@@ -63,6 +63,51 @@ exports.selectActivities = (req, res) => {
     });
 };
 
+exports.selectActivitiesPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { activityId: SearchRgx },
+
+        { activeStatus: SearchRgx },
+        { "activityTitle.en": SearchRgx },
+        { "activityDescription.en": SearchRgx },
+      ],
+    };
+
+    const result = await activityModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await activityModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await activityModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await activityModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
+
 //Update Database Record
 exports.updateActivity = (req, res) => {
   let reqBody = req.body;

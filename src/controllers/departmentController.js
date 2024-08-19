@@ -14,7 +14,7 @@ exports.createDepartment = (req, res) => {
     departmentUpdatedDate: new Date(Date.now()).toISOString(),
     activeStatus: reqBody.activeStatus,
   };
-  console.log(reqBody)
+  console.log(reqBody);
 
   // Create Database record
   departMentModel
@@ -51,6 +51,49 @@ exports.selectDepartments = (req, res) => {
         data: err,
       });
     });
+};
+
+exports.selectDepartmentsPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { departmentID: SearchRgx },
+        { departmentName: SearchRgx },
+        { activeStatus: SearchRgx },
+      ],
+    };
+
+    const result = await departMentModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await departMentModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await departMentModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await departMentModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
 };
 
 //Update Database Record

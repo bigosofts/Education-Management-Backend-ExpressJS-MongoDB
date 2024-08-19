@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./.env" });
 const router = require("./src/routes/api.js");
+const routerTwo = require("./src/routes/apiTwo.js");
 const multer = require("multer");
 
 // const { uploadFileToDrive } = require("./src/utility/driveUtility.js");
@@ -107,5 +108,6 @@ app.get("/", function (req, res) {
 // readFileUrlFromDrive();
 
 app.use("/apis/v1", router);
+app.use("/apis/v2", routerTwo);
 
 module.exports = app;

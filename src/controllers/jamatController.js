@@ -52,6 +52,49 @@ exports.selectJamats = (req, res) => {
     });
 };
 
+exports.selectJamatsPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { jamatID: SearchRgx },
+        { jamatName: SearchRgx },
+        { activeStatus: SearchRgx },
+      ],
+    };
+
+    const result = await jamatModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await jamatModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await jamatModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await jamatModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
+
 //Update Database Record
 exports.updateJamat = (req, res) => {
   let reqBody = req.body;
@@ -63,7 +106,6 @@ exports.updateJamat = (req, res) => {
     jamatUpdatedDate: new Date(Date.now()).toISOString(),
     activeStatus: reqBody.activeStatus,
   };
-
 
   jamatModel
     .updateOne({ _id: filter }, { $set: postBody }, { upsert: true })

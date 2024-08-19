@@ -20,8 +20,6 @@ exports.createMenu = (req, res) => {
     subMenu: subMenu,
   };
 
-  
-
   // Create Database record
   menuModel
     .create(postBody)
@@ -57,6 +55,44 @@ exports.selectMenus = (req, res) => {
         data: err,
       });
     });
+};
+
+exports.selectMenusPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+
+    let SearchQuery = {
+      $or: [{ "menuTitle.en": SearchRgx }],
+    };
+
+    const result = await menuModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await menuModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+
+    } else {
+    const result = await menuModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await menuModel.aggregate([{ $skip: skipRow }, { $limit: perPage }]);
+  }
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
 };
 
 //Update Database Record

@@ -69,6 +69,51 @@ exports.selectImages = (req, res) => {
     });
 };
 
+exports.selectImagesPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { imageName: SearchRgx },
+
+        { status: SearchRgx },
+        { "imageLink.public_id": SearchRgx },
+        { "imageLink.url": SearchRgx },
+      ],
+    };
+
+    const result = await cloudinaryImageModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await cloudinaryImageModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await cloudinaryImageModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await cloudinaryImageModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
+
 //Update Database Record
 exports.updateImage = (req, res) => {
   let reqBody = req.body;

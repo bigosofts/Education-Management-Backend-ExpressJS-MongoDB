@@ -4,7 +4,6 @@ exports.createOTP = (req, res) => {
   //Receive Post Request Data from req body
   let reqBody = req.body;
 
-
   //Make res body for posting to the Database
 
   let postBody = {
@@ -13,7 +12,6 @@ exports.createOTP = (req, res) => {
     createdDate: new Date(Date.now()).toISOString(),
     status: reqBody.status,
   };
-
 
   // Create Database record
   otpModel
@@ -53,6 +51,41 @@ exports.selectOTPS = (req, res) => {
     });
 };
 
+exports.selectOTPSPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchQuery = {
+      $or: [{ email: SearchRgx }, { otp: SearchRgx }, { status: SearchRgx }],
+    };
+
+    const result = await otpModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await otpModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await otpModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await otpModel.aggregate([{ $skip: skipRow }, { $limit: perPage }]);
+  }
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
 //Update Database Record
 exports.updateOTP = (req, res) => {
   let reqBody = req.body;

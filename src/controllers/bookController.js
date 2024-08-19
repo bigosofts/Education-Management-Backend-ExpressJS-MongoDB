@@ -54,6 +54,47 @@ exports.selectBooks = (req, res) => {
     });
 };
 
+exports.selectBooksPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { bookID: SearchRgx },
+        { bookPublicationName: SearchRgx },
+        { activeStatus: SearchRgx },
+        { "bookName.en": SearchRgx },
+      ],
+    };
+
+    const result = await bookModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await bookModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await bookModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await bookModel.aggregate([{ $skip: skipRow }, { $limit: perPage }]);
+  }
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
+
 //Update Database Record
 exports.updateBook = (req, res) => {
   let reqBody = req.body;

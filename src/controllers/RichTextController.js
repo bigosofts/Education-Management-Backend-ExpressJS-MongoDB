@@ -28,7 +28,6 @@ exports.createRichText = (req, res) => {
     });
 };
 
-
 //Read or select Database Record
 exports.selectRichTexts = (req, res) => {
   let query = req.body.query;
@@ -48,6 +47,48 @@ exports.selectRichTexts = (req, res) => {
     });
 };
 
+exports.selectRichTextsPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { RichTextName: SearchRgx },
+        { TextPayload: SearchRgx },
+        { activeStatus: SearchRgx },
+      ],
+    };
+
+    const result = await RichTextModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await RichTextModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await RichTextModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await RichTextModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
 //Update Database Record
 exports.updateRichText = (req, res) => {
   let reqBody = req.body;

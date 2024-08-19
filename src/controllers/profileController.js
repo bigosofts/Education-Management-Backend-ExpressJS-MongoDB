@@ -157,12 +157,73 @@ exports.selectAllStudents = (req, res) => {
     });
 };
 
+exports.selectAllStudentsPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { userName: SearchRgx },
+        { mobileNumber: SearchRgx },
+        { emailAddress: SearchRgx },
+        { batchCount: SearchRgx },
+        { fundStatus: SearchRgx },
+        { countryName: SearchRgx },
+        { gender: SearchRgx },
+        { userRole: SearchRgx },
+        { nidNumber: SearchRgx },
+        { occupation: SearchRgx },
+        { fullPresentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { admissionDate: SearchRgx },
+        { activeStatus: SearchRgx },
+        { "firstName.en": SearchRgx },
+        { "lastName.en": SearchRgx },
+        { "fatherName.en": SearchRgx },
+        { "paymentStatus.paymentID": SearchRgx },
+      ],
+    };
+
+    const result = await studentProfileModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await studentProfileModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await studentProfileModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await studentProfileModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
+
 //Update Database Record
 exports.updateStudent = async (req, res) => {
   let reqBody = req.body;
   let filter = reqBody["_id"];
   let hashedPass = await hashedPasswordCustom(reqBody.password);
   var postBody;
+
   if (hashedPass == null) {
     postBody = {
       firstName: {
@@ -415,6 +476,58 @@ exports.selectAllTeachers = (req, res) => {
         data: err,
       });
     });
+};
+
+exports.selectAllTeachersPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { userName: SearchRgx },
+        { mobileNumber: SearchRgx },
+        { emailAddress: SearchRgx },
+        { gender: SearchRgx },
+        { countryName: SearchRgx },
+        { fullPresentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { educationalBackground: SearchRgx },
+        { "firstName.en": SearchRgx },
+        { "lastName.en": SearchRgx },
+        { "fatherName.en": SearchRgx },
+        { "fatherName.en": SearchRgx },
+      ],
+    };
+
+    const result = await teacherProfileModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await teacherProfileModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await teacherProfileModel.aggregate([{ $count: "total" }]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await teacherProfileModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
 };
 
 //Update Database Record

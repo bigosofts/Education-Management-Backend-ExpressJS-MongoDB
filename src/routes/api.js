@@ -41,6 +41,8 @@ const emailController = require("../controllers/emailController");
 const returnPDFController = require("../controllers/pdfreturnController");
 const writePDFController = require("../controllers/pdfwriteController");
 
+const ProductsController = require("../controllers/productsController");
+
 //multer import
 const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
@@ -246,6 +248,11 @@ router.post("/select-pushnotices", pushNoticeController.selectPushNotices);
 router.post("/select-classes", classController.selectClasses);
 router.post("/select-donations", donationController.selectDonations);
 router.post("/select-images", cloudinaryImageController.selectImages);
+
+router.get(
+  "/productlist/:pageNo/:perPage/:searchKey?",
+  ProductsController.ProductList
+);
 
 //Select or update the data from the database
 router.put("/update-student", profileController.updateStudent);
