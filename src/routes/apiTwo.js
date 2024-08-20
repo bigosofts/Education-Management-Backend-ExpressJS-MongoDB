@@ -34,8 +34,6 @@ const cloudinaryImageController = require("../controllers/cloudinaryController")
 const profileController = require("../controllers/profileController");
 const abacusInstitutionController = require("../controllers/abacusInstitutionController");
 
-const authverify = require("../middlewares/authverifyMiddleware");
-
 router.get(
   "/select-all-students/:pageNo/:perPage/:searchKey?",
   profileController.selectAllStudentsPlus
@@ -128,7 +126,6 @@ router.get(
 
 router.get(
   "/select-payments/:pageNo/:perPage/:searchKey?",
-  authverify,
   paymentController.selectPaymentsPlus
 );
 
