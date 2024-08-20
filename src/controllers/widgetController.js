@@ -61,7 +61,7 @@ exports.selectWidgetsPlus = async (req, res) => {
   let Total;
 
   if (searchValue !== "0") {
-    let SearchRgx = { $regex: searchValue, $options: "i" };
+    let SearchRgx = { $regex: String(searchValue), $options: "i" };
     let SearchQuery = {
       $or: [{ widgetName: SearchRgx }, { activeStatus: SearchRgx }],
     };
