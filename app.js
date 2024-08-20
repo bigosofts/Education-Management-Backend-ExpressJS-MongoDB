@@ -60,16 +60,41 @@ app.use(limiter);
 // Mongo DB Database Connection
 let URI = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@internetmadrasha.oo78neo.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`;
 
-let OPTION = { autoIndex: true };
+let OPTIONS = {
+  autoIndex: true,
+};
 
-mongoose
-  .connect(URI, OPTION)
-  .then(() => {
-    console.log(">Alhamdulillah. Mongoose Connection Successful");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+function connectWithRetry() {
+  console.log("Attempting to connect to MongoDB...");
+  mongoose
+    .connect(URI, OPTIONS)
+    .then(() => {
+      console.log("> Alhamdulillah. Mongoose Connection Successful");
+    })
+    .catch((err) => {
+      console.error(
+        "Failed to connect to MongoDB on startup - retrying in 5 sec",
+        err
+      );
+      setTimeout(connectWithRetry, 5000);
+    });
+}
+
+connectWithRetry();
+
+// Listen for events
+mongoose.connection.on("connected", () => {
+  console.log("Mongoose connected to MongoDB");
+});
+
+mongoose.connection.on("error", (err) => {
+  console.error("Mongoose connection error:", err);
+});
+
+mongoose.connection.on("disconnected", () => {
+  console.log("Mongoose disconnected. Retrying...");
+  connectWithRetry();
+});
 
 //file upload api endpoint
 const storage = multer.diskStorage({
