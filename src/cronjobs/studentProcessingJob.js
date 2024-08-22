@@ -13,9 +13,9 @@ async function processAllStudents() {
   console.log("Running daily student processing job");
   try {
     // Step 1: Clear existing records in the collections
-    await activeStudentsModel.deleteMany({});
-    await duesStudentsModel.deleteMany({});
-    await pendingStudentsModel.deleteMany({});
+    await studentProfileActiveModel.deleteMany({});
+    await studentProfileDueModel.deleteMany({});
+    await studentProfilePendingModel.deleteMany({});
 
     // Step 2: Fetch all students from the main collection
     const allStudents = await studentProfileModel.find({}).exec();
