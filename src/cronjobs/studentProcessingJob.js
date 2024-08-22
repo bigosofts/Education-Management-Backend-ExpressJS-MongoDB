@@ -6,10 +6,8 @@ const studentProfileActiveModel = require("../models/activeStudentProfileModel")
 const studentProfileDueModel = require("../models/dueStudentProfileModel");
 const studentProfilePendingModel = require("../models/pendingStudentProfileModel");
 
-const mongoose = require("mongoose");
-
 // Function to process and update student records
-async function processAllStudents() {
+const processAllStudents = async () => {
   console.log("Running daily student processing job");
   try {
     // Step 1: Clear existing records in the collections
@@ -21,14 +19,49 @@ async function processAllStudents() {
     const allStudents = await studentProfileModel.find({}).exec();
 
     // Step 3: Process each student and categorize them
-    const studentPromises = allStudents.map(async (student, i) => {
+    const studentPromises = allStudents.map(async (student) => {
       const paymentResult = await paymentModel.findOne({
         paymentID: student.paymentStatus.paymentID,
       });
 
       const newStudent = {
-        ...student,
-        _id: new mongoose.Types.ObjectId(), // Generate a new unique ID
+        firstName: {
+          en: student.firstName.en,
+          bn: student.firstName.bn,
+        },
+        lastName: {
+          en: student.lastName.en,
+          bn: student.lastName.bn,
+        },
+        nidNumber: student.nidNumber,
+        birthRegNumber: student.birthRegNumber,
+        fatherName: {
+          en: student.fatherName.en,
+          bn: student.fatherName.bn,
+        },
+        emailAddress: student.emailAddress,
+
+        mobileNumber: student.mobileNumber,
+        occupation: student.occupation,
+        extracurricular: student.extracurricular,
+        studentCourseCode: student.studentCourseCode,
+        studentJamatCode: student.studentJamatCode,
+        gender: student.gender,
+        dateOfBirth: student.dateOfBirth,
+        countryName: student.countryName,
+        fullPresentAddress: student.fullPresentAddress,
+        fullPermanentAddress: student.fullPermanentAddress,
+        admissionSession: student.admissionSession,
+        studentMotive: student.studentMotive,
+        details: student.details,
+        paymentStatus: student.paymentStatus,
+        activeStatus: student.activeStatus,
+        userRole: student.userRole,
+        userName: student.userName,
+        studentDepartment: student.studentDepartment,
+        studentSemester: student.studentSemester,
+        batchCount: student.batchCount,
+        fundStatus: student.fundStatus,
       };
 
       if (paymentResult) {
@@ -44,21 +77,15 @@ async function processAllStudents() {
         });
 
         if (decisionPending) {
-          console.log("Pending" + decisionPending);
           await studentProfilePendingModel.create(newStudent);
         } else if (decisionActive) {
-          console.log("Active" + decisionActive);
           await studentProfileActiveModel.create(newStudent);
         } else {
-          console.log("Due");
           await studentProfileDueModel.create(newStudent);
         }
       } else {
-        console.log("Due");
         await studentProfileDueModel.create(newStudent);
       }
-
-      console.log("done: " + i);
     });
 
     await Promise.all(studentPromises);
@@ -67,8 +94,7 @@ async function processAllStudents() {
   } catch (error) {
     console.error("Error processing students:", error);
   }
-}
+};
 
 // Schedule the job to run every day at midnight
-
-processAllStudents();
+module.exports = processAllStudents;

@@ -10,6 +10,7 @@ dotenv.config({ path: "./.env" });
 const router = require("./src/routes/api.js");
 const routerTwo = require("./src/routes/apiTwo.js");
 const multer = require("multer");
+const processAllStudents = require("./src/cronjobs/studentProcessingJob");
 
 // const { uploadFileToDrive } = require("./src/utility/driveUtility.js");
 // const { deleteFileFromDrive } = require("./src/utility/driveUtility.js");
@@ -70,6 +71,7 @@ function connectWithRetry() {
     .connect(URI, OPTIONS)
     .then(() => {
       console.log("> Alhamdulillah. Mongoose Connection Successful");
+      processAllStudents();
     })
     .catch((err) => {
       console.error(

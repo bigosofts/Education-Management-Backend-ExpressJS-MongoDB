@@ -1,4 +1,9 @@
 const studentProfileModel = require("../models/studentProfileModel");
+
+const studentProfileActiveModel = require("../models/activeStudentProfileModel");
+const studentProfileDueModel = require("../models/dueStudentProfileModel");
+const studentProfilePendingModel = require("../models/pendingStudentProfileModel");
+
 const teacherProfileModel = require("../models/teacherProfileModel");
 const { hashedPasswordCustom } = require("../middlewares/passwordEncryption");
 const paymentModel = require("../models/paymentModel");
@@ -219,225 +224,183 @@ exports.selectAllStudentsPlus = async (req, res) => {
 };
 
 exports.selectAllStudentsMonthlyActivePlus = async (req, res) => {
-  try {
-    let pageNo = Number(req.params.pageNo);
-    let perPage = Number(req.params.perPage);
-    let searchValue = req.params.searchKey;
-    const skipRow = (pageNo - 1) * perPage;
-    let Rows = [];
-    let Total = 0;
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
 
+  if (searchValue !== "0") {
     let SearchRgx = { $regex: String(searchValue), $options: "i" };
-    let SearchQuery =
-      searchValue !== "0"
-        ? {
-            $or: [
-              { userName: SearchRgx },
-              { mobileNumber: SearchRgx },
-              { emailAddress: SearchRgx },
-              { batchCount: SearchRgx },
-              { fundStatus: SearchRgx },
-              { countryName: SearchRgx },
-              { gender: SearchRgx },
-              { userRole: SearchRgx },
-              { nidNumber: SearchRgx },
-              { occupation: SearchRgx },
-              { fullPresentAddress: SearchRgx },
-              { fullPermanentAddress: SearchRgx },
-              { admissionDate: SearchRgx },
-              { activeStatus: SearchRgx },
-              { "firstName.en": SearchRgx },
-              { "lastName.en": SearchRgx },
-              { "fatherName.en": SearchRgx },
-              { "paymentStatus.paymentID": SearchRgx },
-            ],
-          }
-        : {};
+    let SearchQuery = {
+      $or: [
+        { userName: SearchRgx },
+        { mobileNumber: SearchRgx },
+        { emailAddress: SearchRgx },
+        { batchCount: SearchRgx },
+        { fundStatus: SearchRgx },
+        { countryName: SearchRgx },
+        { gender: SearchRgx },
+        { userRole: SearchRgx },
+        { nidNumber: SearchRgx },
+        { occupation: SearchRgx },
+        { fullPresentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { admissionDate: SearchRgx },
+        { activeStatus: SearchRgx },
+        { "firstName.en": SearchRgx },
+        { "lastName.en": SearchRgx },
+        { "fatherName.en": SearchRgx },
+        { "paymentStatus.paymentID": SearchRgx },
+      ],
+    };
 
-    // Step 1: Fetch all students matching the search criteria
-    let allStudents = await studentProfileModel.aggregate([
+    const result = await studentProfileActiveModel.aggregate([
       { $match: SearchQuery },
+      { $count: "total" },
     ]);
 
-    // Step 2: Filter students based on payment criteria
-    for (const student of allStudents) {
-      let paymentResult = await paymentModel.aggregate([
-        { $match: { paymentID: student.paymentStatus.paymentID } },
-      ]);
+    Total = result.length > 0 ? result[0]["total"] : 0;
 
-      if (paymentResult.length > 0) {
-        let actualArray = [...paymentResult[0].monthlyPaymentHistory];
-        actualArray.pop();
+    Rows = await studentProfileModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await studentProfileModel.aggregate([{ $count: "total" }]);
 
-        let decision = actualArray.every((item) => {
-          return item.PaymentStatus == true;
-        });
+    Total = result.length > 0 ? result[0]["total"] : 0;
 
-        if (decision) {
-          Rows.push(student);
-        }
-      }
-    }
-
-    // Step 3: Calculate the total number of filtered students
-    Total = Rows.length;
-
-    // Step 4: Apply pagination to the filtered results
-    Rows = Rows.slice(skipRow, skipRow + perPage);
-
-    res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
-  } catch (error) {
-    console.error("Error fetching students:", error);
-    res.status(500).json({ status: "error", message: "Internal Server Error" });
+    Rows = await studentProfileModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
   }
+
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
 };
 
 exports.selectAllStudentsMonthlyDuePlus = async (req, res) => {
-  try {
-    let pageNo = Number(req.params.pageNo);
-    let perPage = Number(req.params.perPage);
-    let searchValue = req.params.searchKey;
-    const skipRow = (pageNo - 1) * perPage;
-    let Rows = [];
-    let Total = 0;
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
 
+  if (searchValue !== "0") {
     let SearchRgx = { $regex: String(searchValue), $options: "i" };
-    let SearchQuery =
-      searchValue !== "0"
-        ? {
-            $or: [
-              { userName: SearchRgx },
-              { mobileNumber: SearchRgx },
-              { emailAddress: SearchRgx },
-              { batchCount: SearchRgx },
-              { fundStatus: SearchRgx },
-              { countryName: SearchRgx },
-              { gender: SearchRgx },
-              { userRole: SearchRgx },
-              { nidNumber: SearchRgx },
-              { occupation: SearchRgx },
-              { fullPresentAddress: SearchRgx },
-              { fullPermanentAddress: SearchRgx },
-              { admissionDate: SearchRgx },
-              { activeStatus: SearchRgx },
-              { "firstName.en": SearchRgx },
-              { "lastName.en": SearchRgx },
-              { "fatherName.en": SearchRgx },
-              { "paymentStatus.paymentID": SearchRgx },
-            ],
-          }
-        : {};
+    let SearchQuery = {
+      $or: [
+        { userName: SearchRgx },
+        { mobileNumber: SearchRgx },
+        { emailAddress: SearchRgx },
+        { batchCount: SearchRgx },
+        { fundStatus: SearchRgx },
+        { countryName: SearchRgx },
+        { gender: SearchRgx },
+        { userRole: SearchRgx },
+        { nidNumber: SearchRgx },
+        { occupation: SearchRgx },
+        { fullPresentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { admissionDate: SearchRgx },
+        { activeStatus: SearchRgx },
+        { "firstName.en": SearchRgx },
+        { "lastName.en": SearchRgx },
+        { "fatherName.en": SearchRgx },
+        { "paymentStatus.paymentID": SearchRgx },
+      ],
+    };
 
-    // Step 1: Fetch all students matching the search criteria
-    let allStudents = await studentProfileModel.aggregate([
+    const result = await studentProfileDueModel.aggregate([
       { $match: SearchQuery },
+      { $count: "total" },
     ]);
 
-    // Step 2: Filter students based on payment criteria
-    for (const student of allStudents) {
-      let paymentResult = await paymentModel.aggregate([
-        { $match: { paymentID: student.paymentStatus.paymentID } },
-      ]);
+    Total = result.length > 0 ? result[0]["total"] : 0;
 
-      if (paymentResult.length > 0) {
-        let actualArray = [...paymentResult[0].monthlyPaymentHistory];
-        actualArray.pop();
+    Rows = await studentProfileModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await studentProfileModel.aggregate([{ $count: "total" }]);
 
-        let decision = actualArray.some((item) => {
-          return !item.Price && item.PaymentStatus == false;
-        });
+    Total = result.length > 0 ? result[0]["total"] : 0;
 
-        if (decision) {
-          Rows.push(student);
-        }
-      }
-    }
-
-    // Step 3: Calculate the total number of filtered students
-    Total = Rows.length;
-
-    // Step 4: Apply pagination to the filtered results
-    Rows = Rows.slice(skipRow, skipRow + perPage);
-
-    res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
-  } catch (error) {
-    console.error("Error fetching students:", error);
-    res.status(500).json({ status: "error", message: "Internal Server Error" });
+    Rows = await studentProfileModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
   }
+
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
 };
 
 exports.selectAllStudentsMonthlyPendingPlus = async (req, res) => {
-  try {
-    let pageNo = Number(req.params.pageNo);
-    let perPage = Number(req.params.perPage);
-    let searchValue = req.params.searchKey;
-    const skipRow = (pageNo - 1) * perPage;
-    let Rows = [];
-    let Total = 0;
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
 
+  if (searchValue !== "0") {
     let SearchRgx = { $regex: String(searchValue), $options: "i" };
-    let SearchQuery =
-      searchValue !== "0"
-        ? {
-            $or: [
-              { userName: SearchRgx },
-              { mobileNumber: SearchRgx },
-              { emailAddress: SearchRgx },
-              { batchCount: SearchRgx },
-              { fundStatus: SearchRgx },
-              { countryName: SearchRgx },
-              { gender: SearchRgx },
-              { userRole: SearchRgx },
-              { nidNumber: SearchRgx },
-              { occupation: SearchRgx },
-              { fullPresentAddress: SearchRgx },
-              { fullPermanentAddress: SearchRgx },
-              { admissionDate: SearchRgx },
-              { activeStatus: SearchRgx },
-              { "firstName.en": SearchRgx },
-              { "lastName.en": SearchRgx },
-              { "fatherName.en": SearchRgx },
-              { "paymentStatus.paymentID": SearchRgx },
-            ],
-          }
-        : {};
+    let SearchQuery = {
+      $or: [
+        { userName: SearchRgx },
+        { mobileNumber: SearchRgx },
+        { emailAddress: SearchRgx },
+        { batchCount: SearchRgx },
+        { fundStatus: SearchRgx },
+        { countryName: SearchRgx },
+        { gender: SearchRgx },
+        { userRole: SearchRgx },
+        { nidNumber: SearchRgx },
+        { occupation: SearchRgx },
+        { fullPresentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { admissionDate: SearchRgx },
+        { activeStatus: SearchRgx },
+        { "firstName.en": SearchRgx },
+        { "lastName.en": SearchRgx },
+        { "fatherName.en": SearchRgx },
+        { "paymentStatus.paymentID": SearchRgx },
+      ],
+    };
 
-    // Step 1: Fetch all students matching the search criteria
-    let allStudents = await studentProfileModel.aggregate([
+    const result = await studentProfilePendingModel.aggregate([
       { $match: SearchQuery },
+      { $count: "total" },
     ]);
 
-    // Step 2: Filter students based on payment criteria
-    for (const student of allStudents) {
-      let paymentResult = await paymentModel.aggregate([
-        { $match: { paymentID: student.paymentStatus.paymentID } },
-      ]);
+    Total = result.length > 0 ? result[0]["total"] : 0;
 
-      if (paymentResult.length > 0) {
-        let actualArray = [...paymentResult[0].monthlyPaymentHistory];
-        actualArray.pop();
+    Rows = await studentProfileModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await studentProfileModel.aggregate([{ $count: "total" }]);
 
-        let decision = actualArray.some((item) => {
-          return item.Price && item.PaymentStatus == false;
-        });
+    Total = result.length > 0 ? result[0]["total"] : 0;
 
-        if (decision) {
-          Rows.push(student);
-        }
-      }
-    }
-
-    // Step 3: Calculate the total number of filtered students
-    Total = Rows.length;
-
-    // Step 4: Apply pagination to the filtered results
-    Rows = Rows.slice(skipRow, skipRow + perPage);
-
-    res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
-  } catch (error) {
-    console.error("Error fetching students:", error);
-    res.status(500).json({ status: "error", message: "Internal Server Error" });
+    Rows = await studentProfileModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
   }
+
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
 };
 
 //Update Database Record
