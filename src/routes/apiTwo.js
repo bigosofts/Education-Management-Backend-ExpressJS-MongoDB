@@ -40,6 +40,21 @@ router.get(
 );
 
 router.get(
+  "/select-all-students-monthly-active/:pageNo/:perPage/:searchKey?",
+  profileController.selectAllStudentsMonthlyActivePlus
+);
+
+router.get(
+  "/select-all-students-monthly-due/:pageNo/:perPage/:searchKey?",
+  profileController.selectAllStudentsMonthlyDuePlus
+);
+
+router.get(
+  "/select-all-students-monthly-pending/:pageNo/:perPage/:searchKey?",
+  profileController.selectAllStudentsMonthlyPendingPlus
+);
+
+router.get(
   "/select-all-teachers/:pageNo/:perPage/:searchKey?",
   profileController.selectAllTeachersPlus
 );
