@@ -75,7 +75,7 @@ const DataSchema = mongoose.Schema(
       required: true,
     },
     isAdmin: { type: Boolean, default: false },
-    fundStatus: { type: "String" },
+    fundStatus: { type: String },
   },
   { versionKey: false }
 );

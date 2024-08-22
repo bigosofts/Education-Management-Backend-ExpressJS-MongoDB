@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const DataSchema = mongoose.Schema(
   {
-    userName: { type: String, required: true, unique: true },
+    userName: { type: String, unique: true },
     batchCount: { type: String },
-    details: { type: Object, required: true },
-    userRole: { type: String, required: true },
+    details: { type: Object },
+    userRole: { type: String },
     firstName: {
       en: { type: String },
       bn: { type: String },
@@ -20,9 +20,9 @@ const DataSchema = mongoose.Schema(
       en: { type: String },
       bn: { type: String },
     },
-    emailAddress: { type: String, required: true, unique: true },
+    emailAddress: { type: String, unique: true },
     password: { type: String },
-    mobileNumber: { type: String, required: true },
+    mobileNumber: { type: String },
     occupation: { type: String },
     extracurricular: { type: String },
     studentCourseCode: [
@@ -72,10 +72,9 @@ const DataSchema = mongoose.Schema(
     },
     activeStatus: {
       type: String,
-      required: true,
     },
     isAdmin: { type: Boolean, default: false },
-    fundStatus: { type: "String" },
+    fundStatus: { type: String },
   },
   { versionKey: false }
 );
