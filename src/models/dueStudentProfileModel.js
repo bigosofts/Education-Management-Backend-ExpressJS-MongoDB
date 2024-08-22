@@ -80,6 +80,6 @@ const DataSchema = mongoose.Schema(
   { versionKey: false }
 );
 
-const studentProfileModel = mongoose.model("duestudents", DataSchema);
+const studentProfileDueModel = mongoose.model("duestudents", DataSchema);
 
-module.exports = studentProfileModel;
+module.exports = studentProfileDueModel;

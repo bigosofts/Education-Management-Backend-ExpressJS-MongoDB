@@ -1,10 +1,12 @@
-const cron = require("node-cron");
+// const cron = require("node-cron");
 const studentProfileModel = require("../models/studentProfileModel"); // Assuming this is your model
 const paymentModel = require("../models/paymentModel"); // Assuming this is your model
 
-const activeStudentsModel = require("../models/activeStudentProfileModel");
-const duesStudentsModel = require("../models/dueStudentProfileModel");
-const pendingStudentsModel = require("../models/pendingStudentProfileModel");
+const studentProfileActiveModel = require("../models/activeStudentProfileModel");
+const studentProfileDueModel = require("../models/dueStudentProfileModel");
+const studentProfilePendingModel = require("../models/pendingStudentProfileModel");
+
+const mongoose = require("mongoose");
 
 // Function to process and update student records
 async function processAllStudents() {
@@ -19,10 +21,15 @@ async function processAllStudents() {
     const allStudents = await studentProfileModel.find({}).exec();
 
     // Step 3: Process each student and categorize them
-    const studentPromises = allStudents.map(async (student) => {
+    const studentPromises = allStudents.map(async (student, i) => {
       const paymentResult = await paymentModel.findOne({
         paymentID: student.paymentStatus.paymentID,
       });
+
+      const newStudent = {
+        ...student,
+        _id: new mongoose.Types.ObjectId(), // Generate a new unique ID
+      };
 
       if (paymentResult) {
         let actualArray = [...paymentResult.monthlyPaymentHistory];
@@ -37,15 +44,21 @@ async function processAllStudents() {
         });
 
         if (decisionPending) {
-          await pendingStudentsModel.create(student);
+          console.log("Pending" + decisionPending);
+          await studentProfilePendingModel.create(newStudent);
         } else if (decisionActive) {
-          await activeStudentsModel.create(student);
+          console.log("Active" + decisionActive);
+          await studentProfileActiveModel.create(newStudent);
         } else {
-          await duesStudentsModel.create(student);
+          console.log("Due");
+          await studentProfileDueModel.create(newStudent);
         }
       } else {
-        await duesStudentsModel.create(student);
+        console.log("Due");
+        await studentProfileDueModel.create(newStudent);
       }
+
+      console.log("done: " + i);
     });
 
     await Promise.all(studentPromises);
@@ -58,4 +71,4 @@ async function processAllStudents() {
 
 // Schedule the job to run every day at midnight
 
-await processAllStudents();
+processAllStudents();
