@@ -264,17 +264,19 @@ exports.selectAllStudentsMonthlyActivePlus = async (req, res) => {
 
     Total = result.length > 0 ? result[0]["total"] : 0;
 
-    Rows = await studentProfileModel.aggregate([
+    Rows = await studentProfileActiveModel.aggregate([
       { $match: SearchQuery },
       { $skip: skipRow },
       { $limit: perPage },
     ]);
   } else {
-    const result = await studentProfileModel.aggregate([{ $count: "total" }]);
+    const result = await studentProfileActiveModel.aggregate([
+      { $count: "total" },
+    ]);
 
     Total = result.length > 0 ? result[0]["total"] : 0;
 
-    Rows = await studentProfileModel.aggregate([
+    Rows = await studentProfileActiveModel.aggregate([
       { $skip: skipRow },
       { $limit: perPage },
     ]);
@@ -324,17 +326,19 @@ exports.selectAllStudentsMonthlyDuePlus = async (req, res) => {
 
     Total = result.length > 0 ? result[0]["total"] : 0;
 
-    Rows = await studentProfileModel.aggregate([
+    Rows = await studentProfileDueModel.aggregate([
       { $match: SearchQuery },
       { $skip: skipRow },
       { $limit: perPage },
     ]);
   } else {
-    const result = await studentProfileModel.aggregate([{ $count: "total" }]);
+    const result = await studentProfileDueModel.aggregate([
+      { $count: "total" },
+    ]);
 
     Total = result.length > 0 ? result[0]["total"] : 0;
 
-    Rows = await studentProfileModel.aggregate([
+    Rows = await studentProfileDueModel.aggregate([
       { $skip: skipRow },
       { $limit: perPage },
     ]);
@@ -384,17 +388,19 @@ exports.selectAllStudentsMonthlyPendingPlus = async (req, res) => {
 
     Total = result.length > 0 ? result[0]["total"] : 0;
 
-    Rows = await studentProfileModel.aggregate([
+    Rows = await studentProfilePendingModel.aggregate([
       { $match: SearchQuery },
       { $skip: skipRow },
       { $limit: perPage },
     ]);
   } else {
-    const result = await studentProfileModel.aggregate([{ $count: "total" }]);
+    const result = await studentProfilePendingModel.aggregate([
+      { $count: "total" },
+    ]);
 
     Total = result.length > 0 ? result[0]["total"] : 0;
 
-    Rows = await studentProfileModel.aggregate([
+    Rows = await studentProfilePendingModel.aggregate([
       { $skip: skipRow },
       { $limit: perPage },
     ]);
@@ -613,6 +619,7 @@ exports.createTeacher = (req, res) => {
       });
     });
 };
+
 exports.selectTeacherData = (userName) => {
   let query = userName;
   return teacherProfileModel
