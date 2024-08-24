@@ -84,8 +84,6 @@ function processAllStudents() {
           } else {
             await studentProfileDueModel.create(newStudent);
           }
-        } else {
-          await studentProfileDueModel.create(newStudent);
         }
       });
 
