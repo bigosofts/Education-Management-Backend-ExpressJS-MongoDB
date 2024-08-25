@@ -9,7 +9,7 @@ A brief description of what this project does and who it's for
 
 ## Deployment
 
-To deploy this project download it, make a zip file and upload it to wordpress theme
+To deploy this project run the following command:
 
 ```bash
   git clone https://github.com/bigosofts/Education-Management-Backend-ExpressJS-MongoDB.git
