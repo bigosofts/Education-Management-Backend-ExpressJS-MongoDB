@@ -47,18 +47,18 @@ To run this project, you will need to add the following environment variables to
 `CLOUDINARY_API_KEY`
 `CLOUDINARY_API_SECRET`
 
-Here fronend means the link of the frontend. 
-Backend is the link of the Backend. 
+Here frontend means the link of the frontend website. 
+Backend is the link of the Backend website. 
 Client id for google mail,
 Clientecret, redirect uri and refresh token will be used in google mail.
-cloud name is for cloudinary name, you need cloudinary api key and secret. 
+Cloud name is for cloudinary name, you need cloudinary api key and secret. 
 
 
 
 
 ## Authors
 
-- [@Abdullah Al Amin](https://www.linkedin.com/in/abdullah-al-amin-93408b192)
+- [@Abdullah Al Amin](https://github.com/bigosofts)
 
 
 ## Demo
@@ -174,6 +174,6 @@ Frontend is also in my github repository. Search for Education Management Redux 
 
 ## Tech Stack
 
-**backend:** NodeJS, ExpressJS, Mongoose, JWT, Bycrypt
+**Backend:** NodeJS, ExpressJS, Mongoose, JWT, Bycrypt
 
 **Deployment:** Vercel Serverless. On Production for 6 months
