@@ -94,15 +94,16 @@ function processAllStudents() {
       console.error("Error processing students:", error);
     }
   };
+  
   //every day at midnight
-  // cron.schedule("0 0 * * *", () => {
-  //   processAl();
-  // });
-
-  //every hour
-  cron.schedule("0 * * * *", () => {
+  cron.schedule("0 0 * * *", () => {
     processAl();
   });
+
+  //every hour
+  // cron.schedule("0 * * * *", () => {
+  //   processAl();
+  // });
 }
 
 // Schedule the job to run every day at midnight
