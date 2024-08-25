@@ -63,7 +63,7 @@ cloud name is for cloudinary name, you need cloudinary api key and secret.
 
 ## Demo
 
-Browse this link to see theme in action:
+Browse this link to see backened API in action:
 
 https://api.internetmadrasa.com/
 ## API Reference
