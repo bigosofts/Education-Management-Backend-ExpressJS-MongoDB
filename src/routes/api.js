@@ -45,6 +45,7 @@ const ProductsController = require("../controllers/productsController");
 
 //multer import
 const multer = require("multer");
+const processJob = require("../cronjobs/onDemandProcessing");
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.post("/send-email", emailController.sendEmail);
@@ -135,6 +136,8 @@ router.get("/logout", authverify, (req, res) => {
     },
   });
 });
+
+router.get("/process-students", processJob.process);
 
 //signup
 router.post(
