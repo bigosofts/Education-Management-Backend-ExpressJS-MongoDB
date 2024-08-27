@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const DataSchema = mongoose.Schema(
   {
-    userName: { type: String, unique: true },
+    userName: { type: String },
     batchCount: { type: String },
     details: { type: Object },
     userRole: { type: String },
@@ -79,6 +79,9 @@ const DataSchema = mongoose.Schema(
   { versionKey: false }
 );
 
-const studentProfilePendingModel = mongoose.model("pendingstudents", DataSchema);
+const studentProfilePendingModel = mongoose.model(
+  "pendingstudents",
+  DataSchema
+);
 
 module.exports = studentProfilePendingModel;

@@ -94,7 +94,7 @@ function processAllStudents() {
       console.error("Error processing students:", error);
     }
   };
-  
+
   //every day at midnight
   cron.schedule("0 0 * * *", () => {
     processAl();

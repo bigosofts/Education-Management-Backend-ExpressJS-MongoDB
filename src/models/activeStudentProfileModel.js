@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const DataSchema = mongoose.Schema(
   {
-    userName: { type: String, unique: true },
+    userName: { type: String },
     batchCount: { type: String },
     details: { type: Object },
     userRole: { type: String },
