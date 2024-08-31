@@ -58,6 +58,7 @@ exports.createStudent = (req, res) => {
   let studentSemester = reqBody.studentSemester;
   let batchCount = reqBody.batchCount;
   let fundStatus = reqBody.fundStatus;
+  let accountStatus = reqBody.accountStatus;
 
   //Make res body for posting to the Database
 
@@ -91,6 +92,7 @@ exports.createStudent = (req, res) => {
     studentSemester: studentSemester,
     batchCount: batchCount,
     fundStatus: fundStatus,
+    accountStatus: accountStatus,
   };
 
   // Create Database record
@@ -455,6 +457,7 @@ exports.updateStudent = async (req, res) => {
       studentSemester: reqBody.studentSemester,
       batchCount: reqBody.batchCount,
       fundStatus: reqBody.fundStatus,
+      accountStatus: reqBody.accountStatus,
     };
   } else {
     postBody = {
@@ -496,6 +499,7 @@ exports.updateStudent = async (req, res) => {
       studentSemester: reqBody.studentSemester,
       batchCount: reqBody.batchCount,
       fundStatus: reqBody.fundStatus,
+      accountStatus: reqBody.accountStatus,
     };
   }
 
