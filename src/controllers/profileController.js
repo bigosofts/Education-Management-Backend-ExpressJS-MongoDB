@@ -6,7 +6,7 @@ const studentProfilePendingModel = require("../models/pendingStudentProfileModel
 
 const teacherProfileModel = require("../models/teacherProfileModel");
 const { hashedPasswordCustom } = require("../middlewares/passwordEncryption");
-const paymentModel = require("../models/paymentModel");
+
 // const userPermission =require("../middlewares/userPermissionCheck");
 
 //creating student records to database

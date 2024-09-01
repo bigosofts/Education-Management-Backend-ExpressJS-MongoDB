@@ -20,7 +20,7 @@ const DataSchema = mongoose.Schema(
       en: { type: String },
       bn: { type: String },
     },
-    emailAddress: { type: String, unique: true },
+    emailAddress: { type: String},
     password: { type: String },
     mobileNumber: { type: String },
     occupation: { type: String },
