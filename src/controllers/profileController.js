@@ -7,6 +7,11 @@ const studentProfilePendingModel = require("../models/pendingStudentProfileModel
 const teacherProfileModel = require("../models/teacherProfileModel");
 const { hashedPasswordCustom } = require("../middlewares/passwordEncryption");
 
+const annualIrregularStudentsModel = require("../models/annualIrregularStudentsModel");
+const annualActiveStudentsModel = require("../models/annualActiveStudentsModel");
+const annualPendingStudentsModel = require("../models/annualPendingStudentsModel");
+const annualDueStudentsModel = require("../models/annualDueStudentsModel");
+
 // const userPermission =require("../middlewares/userPermissionCheck");
 
 //creating student records to database
