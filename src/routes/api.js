@@ -139,6 +139,10 @@ router.get("/logout", authverify, (req, res) => {
 
 router.get("/process-students", processJob.process);
 
+router.get("/process-students-annual", processJob.processAnnual);
+
+router.get("/process-students-anual", processJob.processAnnual);
+
 //signup
 router.post(
   "/create-teacher",

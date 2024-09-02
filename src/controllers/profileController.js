@@ -416,6 +416,257 @@ exports.selectAllStudentsMonthlyPendingPlus = async (req, res) => {
   res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
 };
 
+//annual fetch data
+exports.selectAllStudentsAnnualActivePlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: String(searchValue), $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { userName: SearchRgx },
+        { mobileNumber: SearchRgx },
+        { emailAddress: SearchRgx },
+        { batchCount: SearchRgx },
+        { fundStatus: SearchRgx },
+        { countryName: SearchRgx },
+        { gender: SearchRgx },
+        { userRole: SearchRgx },
+        { nidNumber: SearchRgx },
+        { occupation: SearchRgx },
+        { fullPresentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { admissionDate: SearchRgx },
+        { activeStatus: SearchRgx },
+        { "firstName.en": SearchRgx },
+        { "lastName.en": SearchRgx },
+        { "fatherName.en": SearchRgx },
+        { "paymentStatus.paymentID": SearchRgx },
+      ],
+    };
+
+    const result = await annualActiveStudentsModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await annualActiveStudentsModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await annualActiveStudentsModel.aggregate([
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await annualActiveStudentsModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
+
+exports.selectAllStudentsAnnualDuePlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: String(searchValue), $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { userName: SearchRgx },
+        { mobileNumber: SearchRgx },
+        { emailAddress: SearchRgx },
+        { batchCount: SearchRgx },
+        { fundStatus: SearchRgx },
+        { countryName: SearchRgx },
+        { gender: SearchRgx },
+        { userRole: SearchRgx },
+        { nidNumber: SearchRgx },
+        { occupation: SearchRgx },
+        { fullPresentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { admissionDate: SearchRgx },
+        { activeStatus: SearchRgx },
+        { "firstName.en": SearchRgx },
+        { "lastName.en": SearchRgx },
+        { "fatherName.en": SearchRgx },
+        { "paymentStatus.paymentID": SearchRgx },
+      ],
+    };
+
+    const result = await annualDueStudentsModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await annualDueStudentsModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await annualDueStudentsModel.aggregate([
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await annualDueStudentsModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
+
+exports.selectAllStudentsAnnualPendingPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: String(searchValue), $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { userName: SearchRgx },
+        { mobileNumber: SearchRgx },
+        { emailAddress: SearchRgx },
+        { batchCount: SearchRgx },
+        { fundStatus: SearchRgx },
+        { countryName: SearchRgx },
+        { gender: SearchRgx },
+        { userRole: SearchRgx },
+        { nidNumber: SearchRgx },
+        { occupation: SearchRgx },
+        { fullPresentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { admissionDate: SearchRgx },
+        { activeStatus: SearchRgx },
+        { "firstName.en": SearchRgx },
+        { "lastName.en": SearchRgx },
+        { "fatherName.en": SearchRgx },
+        { "paymentStatus.paymentID": SearchRgx },
+      ],
+    };
+
+    const result = await annualPendingStudentsModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await annualPendingStudentsModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await annualPendingStudentsModel.aggregate([
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await annualPendingStudentsModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
+
+exports.selectAllStudentsAnnualIrregularPlus = async (req, res) => {
+  let pageNo = Number(req.params.pageNo);
+  let perPage = Number(req.params.perPage);
+  let searchValue = req.params.searchKey;
+  const skipRow = (pageNo - 1) * perPage;
+  let Rows;
+  let Total;
+
+  if (searchValue !== "0") {
+    let SearchRgx = { $regex: String(searchValue), $options: "i" };
+    let SearchQuery = {
+      $or: [
+        { userName: SearchRgx },
+        { mobileNumber: SearchRgx },
+        { emailAddress: SearchRgx },
+        { batchCount: SearchRgx },
+        { fundStatus: SearchRgx },
+        { countryName: SearchRgx },
+        { gender: SearchRgx },
+        { userRole: SearchRgx },
+        { nidNumber: SearchRgx },
+        { occupation: SearchRgx },
+        { fullPresentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { fullPermanentAddress: SearchRgx },
+        { admissionDate: SearchRgx },
+        { activeStatus: SearchRgx },
+        { "firstName.en": SearchRgx },
+        { "lastName.en": SearchRgx },
+        { "fatherName.en": SearchRgx },
+        { "paymentStatus.paymentID": SearchRgx },
+      ],
+    };
+
+    const result = await annualIrregularStudentsModel.aggregate([
+      { $match: SearchQuery },
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await annualIrregularStudentsModel.aggregate([
+      { $match: SearchQuery },
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  } else {
+    const result = await annualIrregularStudentsModel.aggregate([
+      { $count: "total" },
+    ]);
+
+    Total = result.length > 0 ? result[0]["total"] : 0;
+
+    Rows = await annualIrregularStudentsModel.aggregate([
+      { $skip: skipRow },
+      { $limit: perPage },
+    ]);
+  }
+
+  res.status(200).json({ status: "Alhamdulillah", total: Total, data: Rows });
+};
+
+//Annual api end
+
 //Update Database Record
 exports.updateStudent = async (req, res) => {
   let reqBody = req.body;

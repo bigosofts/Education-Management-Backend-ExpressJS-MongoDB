@@ -54,6 +54,29 @@ router.get(
   profileController.selectAllStudentsMonthlyPendingPlus
 );
 
+//Annual students Api
+router.get(
+  "/select-all-students-annual-active/:pageNo/:perPage/:searchKey?",
+  profileController.selectAllStudentsAnnualActivePlus
+);
+
+router.get(
+  "/select-all-students-annual-due/:pageNo/:perPage/:searchKey?",
+  profileController.selectAllStudentsAnnualDuePlus
+);
+
+router.get(
+  "/select-all-students-annual-pending/:pageNo/:perPage/:searchKey?",
+  profileController.selectAllStudentsAnnualPendingPlus
+);
+
+router.get(
+  "/select-all-students-annual-irregular/:pageNo/:perPage/:searchKey?",
+  profileController.selectAllStudentsAnnualIrregularPlus
+);
+
+//End of Annual Students Api
+
 router.get(
   "/select-all-teachers/:pageNo/:perPage/:searchKey?",
   profileController.selectAllTeachersPlus
