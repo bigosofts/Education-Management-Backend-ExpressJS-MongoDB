@@ -25,6 +25,7 @@ exports.process = async (req, res) => {
     const pendingStudents = [];
     const activeStudents = [];
     const dueStudents = [];
+    let counter = 0;
 
     // Process each student and categorize them
     for (const student of allStudents) {
@@ -86,10 +87,16 @@ exports.process = async (req, res) => {
 
         // Categorize the student based on payment decisions
         if (decisionPending) {
+          counter++;
+          console.log(counter);
           pendingStudents.push(newStudent);
         } else if (decisionActive) {
+          counter++;
+          console.log(counter);
           activeStudents.push(newStudent);
         } else {
+          counter++;
+          console.log(counter);
           dueStudents.push(newStudent);
         }
       }
@@ -133,7 +140,7 @@ exports.processAnnual = async (req, res) => {
     await annualIrregularStudentsModel.deleteMany({});
 
     // Step 2: Fetch all students from the main collection
-    const allStudents = await studentProfileModel.find({}).exec();
+    const allStudents = await studentProfileModel.find({}).lean().exec();
 
     // Step 3: Process each student and categorize them
     const activeStudents = [];
