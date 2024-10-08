@@ -13,42 +13,42 @@ const annualIrregularStudentsModel = require("../models/annualIrregularStudentsM
 exports.process = async (req, res) => {
   console.log("Running daily student processing job");
   try {
-    // Step 1: Clear existing records in the collections
-    await studentProfileActiveModel.deleteMany({});
-    await studentProfileDueModel.deleteMany({});
-    await studentProfilePendingModel.deleteMany({});
+    // Step 1: Clear existing records in the collections (no need to wait one after another)
+    await Promise.all([
+      studentProfileActiveModel.deleteMany({}),
+      studentProfileDueModel.deleteMany({}),
+      studentProfilePendingModel.deleteMany({}),
+    ]);
 
-    // Step 2: Fetch all students from the main collection
-    const allStudents = await studentProfileModel.find({}).exec();
+    // Step 2: Fetch all students and payments in a single query
+    const [allStudents, allPayments] = await Promise.all([
+      studentProfileModel.find({}).lean().exec(), // Use lean for faster read operations
+      paymentModel.find({}).lean().exec(),
+    ]);
 
-    // Step 3: Process each student and categorize them
+    // Create a map for payments based on paymentID for O(1) lookups
+    const paymentMap = new Map();
+    allPayments.forEach((payment) => {
+      paymentMap.set(payment.paymentID, payment);
+    });
+
+    // Step 3: Initialize arrays for each category
     const pendingStudents = [];
     const activeStudents = [];
     const dueStudents = [];
     let counter = 0;
 
-    // Process each student and categorize them
-    for (const student of allStudents) {
-      const paymentResult = await paymentModel.findOne({
-        paymentID: student.paymentStatus.paymentID,
-      });
+    // Step 4: Process each student
+    allStudents.forEach((student) => {
+      const paymentResult = paymentMap.get(student.paymentStatus.paymentID);
 
       if (paymentResult && student.accountStatus.status === "regular") {
         const newStudent = {
-          firstName: {
-            en: student.firstName.en,
-            bn: student.firstName.bn,
-          },
-          lastName: {
-            en: student.lastName.en,
-            bn: student.lastName.bn,
-          },
+          firstName: student.firstName,
+          lastName: student.lastName,
           nidNumber: student.nidNumber,
           birthRegNumber: student.birthRegNumber,
-          fatherName: {
-            en: student.fatherName.en,
-            bn: student.fatherName.bn,
-          },
+          fatherName: student.fatherName,
           emailAddress: student.emailAddress,
           mobileNumber: student.mobileNumber,
           occupation: student.occupation,
@@ -74,18 +74,17 @@ exports.process = async (req, res) => {
           accountStatus: student.accountStatus,
         };
 
+        // Remove the latest payment (if needed)
         let actualArray = [...paymentResult.monthlyPaymentHistory];
-        actualArray.pop(); // Exclude the latest payment (if required)
+        actualArray.pop();
 
-        let decisionPending = actualArray.some((item) => {
-          return item.Price && item.PaymentStatus === false;
-        });
+        // Determine status based on payment history
+        const decisionPending = actualArray.some(
+          (item) => item.Price && !item.PaymentStatus
+        );
+        const decisionActive = actualArray.every((item) => item.PaymentStatus);
 
-        let decisionActive = actualArray.every((item) => {
-          return item.PaymentStatus === true;
-        });
-
-        // Categorize the student based on payment decisions
+        // Categorize the student
         if (decisionPending) {
           counter++;
           console.log(counter);
@@ -100,33 +99,29 @@ exports.process = async (req, res) => {
           dueStudents.push(newStudent);
         }
       }
-    }
+    });
 
-    // Bulk write operations for each category
-    if (pendingStudents.length > 0) {
-      await studentProfilePendingModel.insertMany(pendingStudents.reverse());
-    }
+    // Step 5: Bulk insert students into their respective collections
+    await Promise.all([
+      pendingStudents.length &&
+        studentProfilePendingModel.insertMany(pendingStudents.reverse()),
+      activeStudents.length &&
+        studentProfileActiveModel.insertMany(activeStudents.reverse()),
+      dueStudents.length &&
+        studentProfileDueModel.insertMany(dueStudents.reverse()),
+    ]);
 
-    if (activeStudents.length > 0) {
-      await studentProfileActiveModel.insertMany(activeStudents.reverse());
-    }
-
-    if (dueStudents.length > 0) {
-      await studentProfileDueModel.insertMany(dueStudents.reverse());
-    }
-
-    console.log("All students have been processed and categorized.");
     res.status(200).json({
       status: "Alhamdulillah",
       data: "",
     });
+    console.log("All students have been processed and categorized.");
   } catch (error) {
-    console.error("Error processing students:", error);
-
     res.status(400).json({
       status: "Innalillah",
       data: error,
     });
+    console.error("Error processing students:", error);
   }
 };
 
