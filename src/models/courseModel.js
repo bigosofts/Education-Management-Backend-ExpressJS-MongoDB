@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const DataSchema = mongoose.Schema(
   {
-    courseCode: { type: String, required: true, unique: true },
+    courseCode: { 
+      type: String, 
+      equired: true, 
+      unique: true },
     imageLink: {
       type: String,
     },
@@ -30,23 +33,8 @@ const DataSchema = mongoose.Schema(
         type: String,
       },
     },
-    createdDate: { type: Date },
-    updatedDate: { type: Date },
     startingDate: {
-      en: {
-        type: String,
-      },
-      bn: {
-        type: String,
-      },
-    },
-    popularity: {
-      en: {
-        type: String,
-      },
-      bn: {
-        type: String,
-      },
+      type: Date
     },
     jamatName: [{ type: String }],
     activeStatus: {
@@ -163,7 +151,10 @@ const DataSchema = mongoose.Schema(
     ],
     courseVideoID: [{ type: String }],
   },
-  { versionKey: false }
+  { 
+    versionKey: false,
+    timestamps: true
+  }
 );
 
 const courseModel = mongoose.model("courses", DataSchema);

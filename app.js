@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./.env" });
 const router = require("./src/routes/api.js");
+const updateRoute = require("./src/routes/route.js");
 const routerTwo = require("./src/routes/apiTwo.js");
 const multer = require("multer");
 const processAllStudents = require("./src/cronjobs/studentProcessingJob");
@@ -136,5 +137,8 @@ app.get("/", function (req, res) {
 
 app.use("/apis/v1", router);
 app.use("/apis/v2", routerTwo);
+
+// This api will work on rtk query from frontend 
+app.use("/apis/v3", updateRoute);
 
 module.exports = app;

@@ -91,6 +91,38 @@ exports.selectCourses = (req, res) => {
     });
 };
 
+//Get All Course from databases This api for V3
+exports.getCourses = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 2;
+  const skip = (page - 1) * limit;
+
+  try {
+    const totalCourses = await courseModel.countDocuments();
+
+    const result = await courseModel.aggregate([
+      { $skip: skip },
+      { $limit: limit },
+    ]);
+
+    res.status(200).send({
+      status: "Alhamdulillah",
+      isSuccesse: true,
+      courses: result,
+      total: totalCourses,
+      page: page,
+      totalPages: Math.ceil(totalCourses / limit),
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(404).send({
+      status: "Innalillah",
+      isSuccesse: false,
+      courses: [],
+    });
+  }
+};
+
 exports.selectCoursesPlus = async (req, res) => {
   let pageNo = Number(req.params.pageNo);
   let perPage = Number(req.params.perPage);
