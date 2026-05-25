@@ -34,8 +34,9 @@ const DataSchema = mongoose.Schema(
       },
     },
     startingDate: {
-      type: Date
-    },
+  en: { type: String },
+  bn: { type: String },
+},
     jamatName: [{ type: String }],
     activeStatus: {
       type: String,
