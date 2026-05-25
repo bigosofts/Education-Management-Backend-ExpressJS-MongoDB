@@ -60,43 +60,42 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Mongo DB Database Connection
-let URI = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@internetmadrasha.oo78neo.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`;
+const mongoose = require("mongoose");
 
-let OPTIONS = {
+const URI = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@internetmadrasha.oo78neo.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`;
+
+const OPTIONS = {
   autoIndex: true,
 };
 
-function connectWithRetry() {
-  console.log("Attempting to connect to MongoDB...");
-  mongoose
-    .connect(URI, OPTIONS)
-    .then(() => {
-      console.log("> Alhamdulillah. Mongoose Connection Successful");
-      processAllStudents();
-    })
-    .catch((err) => {
-      console.error(
-        "Failed to connect to MongoDB on startup - retrying in 5 sec",
-        err
-      );
-      setTimeout(connectWithRetry, 5000);
-    });
+async function connectDB() {
+  try {
+    console.log("Attempting MongoDB connection...");
+
+    await mongoose.connect(URI, OPTIONS);
+
+    console.log("> Alhamdulillah. MongoDB Connected Successfully");
+
+    processAllStudents();
+  } catch (err) {
+    console.error("MongoDB connection failed:", err.message);
+
+    setTimeout(connectDB, 5000);
+  }
 }
 
-connectWithRetry();
+connectDB();
 
-// Listen for events
 mongoose.connection.on("connected", () => {
-  console.log("Mongoose connected to MongoDB");
+  console.log("Mongoose connected");
 });
 
 mongoose.connection.on("error", (err) => {
-  console.error("Mongoose connection error:", err);
+  console.log("Mongoose error:", err.message);
 });
 
 mongoose.connection.on("disconnected", () => {
-  console.log("Mongoose disconnected. Retrying...");
-  connectWithRetry();
+  console.log("Mongoose disconnected");
 });
 
 //file upload api endpoint
