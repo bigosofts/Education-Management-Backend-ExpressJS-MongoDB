@@ -61,27 +61,20 @@ app.use(limiter);
 
 // Mongo DB Database Connection
 
-const URI = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@internetmadrasha.oo78neo.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`;
+mongoose.set("strictQuery", false);
 
-let isConnected = false;
+const URI = `mongodb://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@ac-whusmav-shard-00-00.fbrulyl.mongodb.net:27017,ac-whusmav-shard-00-01.fbrulyl.mongodb.net:27017,ac-whusmav-shard-00-02.fbrulyl.mongodb.net:27017/${process.env.DATABASE_NAME}?ssl=true&replicaSet=atlas-co2mb8-shard-0&authSource=admin&retryWrites=true&w=majority`;
 
 async function connectDB() {
-  if (isConnected) {
-    console.log("MongoDB already connected");
-    return;
-  }
-
   try {
-    console.log("Connecting to MongoDB...");
+    console.log("Connecting MongoDB...");
 
-    const db = await mongoose.connect(URI, {
+    await mongoose.connect(URI, {
       autoIndex: true,
       serverSelectionTimeoutMS: 5000,
     });
 
-    isConnected = db.connections[0].readyState === 1;
-
-    console.log("> MongoDB Connected");
+    console.log("MongoDB Connected");
   } catch (err) {
     console.error("MongoDB Error:", err.message);
   }
