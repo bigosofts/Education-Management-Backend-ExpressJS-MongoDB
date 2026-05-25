@@ -63,39 +63,31 @@ app.use(limiter);
 
 const URI = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@internetmadrasha.oo78neo.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`;
 
-const OPTIONS = {
-  autoIndex: true,
-};
+let isConnected = false;
 
 async function connectDB() {
+  if (isConnected) {
+    console.log("MongoDB already connected");
+    return;
+  }
+
   try {
-    console.log("Attempting MongoDB connection...");
+    console.log("Connecting to MongoDB...");
 
-    await mongoose.connect(URI, OPTIONS);
+    const db = await mongoose.connect(URI, {
+      autoIndex: true,
+      serverSelectionTimeoutMS: 5000,
+    });
 
-    console.log("> Alhamdulillah. MongoDB Connected Successfully");
+    isConnected = db.connections[0].readyState === 1;
 
-    processAllStudents();
+    console.log("> MongoDB Connected");
   } catch (err) {
-    console.error("MongoDB connection failed:", err.message);
-
-    setTimeout(connectDB, 5000);
+    console.error("MongoDB Error:", err.message);
   }
 }
 
 connectDB();
-
-mongoose.connection.on("connected", () => {
-  console.log("Mongoose connected");
-});
-
-mongoose.connection.on("error", (err) => {
-  console.log("Mongoose error:", err.message);
-});
-
-mongoose.connection.on("disconnected", () => {
-  console.log("Mongoose disconnected");
-});
 
 //file upload api endpoint
 const storage = multer.diskStorage({
